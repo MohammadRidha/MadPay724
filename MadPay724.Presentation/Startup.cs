@@ -29,6 +29,7 @@ namespace MadPay724.Presentation
                 .AddNewtonsoftJson();
 
             // این برای اینکه بهمون اررور نده برای گرفتن اطلاعات از سمت سرور
+            //دارم تست میکنم گیت رو
             services.AddCors();
         }
 
