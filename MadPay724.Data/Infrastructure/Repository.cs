@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MadPay724.Data.Infrastructure
 {
-    public class Repository<TEnity> : IRepository<TEnity>, IDisposable where TEnity : class
+    public abstract class Repository<TEnity> : IRepository<TEnity>, IDisposable where TEnity : class
     {
 
         private readonly DbContext _db;
