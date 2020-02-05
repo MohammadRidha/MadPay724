@@ -24,6 +24,7 @@ namespace MadPay724.Data.Models
 
 
         public byte[] PasswordHash { get; set; }
+        //salt: yek raznegari hastesh ke ma ba in kar az hack shodane useramon jologiri mikonim
         public byte[] PasswordSalt { get; set; }
 
 
