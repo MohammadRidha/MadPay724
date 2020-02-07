@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MadPay724.Data.DatabaseContext
 {
-    class MadPayDbContext : DbContext
+    public class MadPayDbContext : DbContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
