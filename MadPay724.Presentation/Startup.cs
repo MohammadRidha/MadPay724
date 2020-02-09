@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MadPay724.Data.DatabaseContext;
 using MadPay724.Repo.Infrastructure;
+using MadPay724.Services.Auth.Interface;
+using MadPay724.Services.Auth.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,6 +38,7 @@ namespace MadPay724.Presentation
 
             #region ioc
             services.AddScoped<IUnitOfWork<MadPayDbContext>, UnitOfWork<MadPayDbContext>>();
+            services.AddScoped<IAuthService, AuthService>();
             #endregion
         }
 
