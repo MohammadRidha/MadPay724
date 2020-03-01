@@ -21,6 +21,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 namespace MadPay724.Presentation
 {
@@ -38,6 +40,50 @@ namespace MadPay724.Presentation
         {
             services.AddControllers()
                 .AddNewtonsoftJson();
+
+            #region NSwage for document api 
+
+            services.AddOpenApiDocument(document =>
+            {
+                document.DocumentName = "Site";
+                document.ApiGroupNames = new[] { "Site" };
+                document.PostProcess = d =>
+                {
+                    d.Info.Title = "MyDocument for api project";
+                    //d.Info.Contact = new OpenApiContact
+                    //{
+                    //    Name = "keyone",
+                    //    Email = string.Empty,
+                    //    Url = "https://twitter.com/keyone"
+                    //};
+                    //d.Info.License = new OpenApiLicense
+                    //{
+                    //    Name = "Use under LICX",
+                    //    Url = "https://example.com/license"
+                    //};
+                };
+
+
+                document.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                document.OperationProcessors.Add(
+                    new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+                //      new OperationSecurityScopeProcessor("JWT"));
+
+            });
+            services.AddOpenApiDocument(document =>
+            {
+                document.DocumentName = "Api";
+                document.ApiGroupNames = new[] { "Api" };
+            });
+
+            #endregion
 
             // این برای اینکه بهمون اررور نده برای گرفتن اطلاعات از سمت سرور
             //دارم تست میکنم گیت رو
@@ -101,6 +147,8 @@ namespace MadPay724.Presentation
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
@@ -109,3 +157,4 @@ namespace MadPay724.Presentation
         }
     }
 }
+

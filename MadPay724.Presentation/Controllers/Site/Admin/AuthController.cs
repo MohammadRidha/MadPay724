@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace MadPay724.Presentation.Controllers.Site.Admin
 {
     [Authorize]
+    [ApiExplorerSettings(GroupName = "Site")]
     [Route("site/admin/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
