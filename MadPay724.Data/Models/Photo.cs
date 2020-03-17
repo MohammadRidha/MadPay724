@@ -15,8 +15,13 @@ namespace MadPay724.Data.Models
         }
 
         [Required]
+        [StringLength(0, MinimumLength = 1000)]
         public string Url { get; set; }
+
+        [StringLength(0, MinimumLength = 500)]
         public string Description { get; set; }
+
+        [StringLength(0, MinimumLength = 500)]
         public string Alt { get; set; }
 
         [Required]
@@ -24,6 +29,8 @@ namespace MadPay724.Data.Models
 
         [Required]
         public string UserId { get; set; }
+
+
         public User User { get; set; }
     }
 }
