@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using MadPay724.Common.Helpers;
 using MadPay724.Data.DatabaseContext;
 using MadPay724.Repo.Infrastructure;
@@ -94,6 +95,7 @@ namespace MadPay724.Presentation
             // این برای اینکه بهمون اررور نده برای گرفتن اطلاعات از سمت سرور
             //دارم تست میکنم گیت رو
             services.AddCors();
+            services.AddAutoMapper(typeof(Startup));
 
             #region ioc
             services.AddScoped<IUnitOfWork<MadPayDbContext>, UnitOfWork<MadPayDbContext>>();
