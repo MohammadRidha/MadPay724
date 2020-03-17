@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using MadPay724.Common.Helpers;
 using MadPay724.Data.DatabaseContext;
 using MadPay724.Repo.Infrastructure;
+using MadPay724.Services.Seed.Interface;
+using MadPay724.Services.Seed.Service;
 using MadPay724.Services.Site.Admin.Auth.Interface;
 using MadPay724.Services.Site.Admin.Auth.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -92,6 +94,8 @@ namespace MadPay724.Presentation
             #region ioc
             services.AddScoped<IUnitOfWork<MadPayDbContext>, UnitOfWork<MadPayDbContext>>();
             services.AddScoped<IAuthService, AuthService>();
+
+            services.AddScoped<ISeedService, SeedService>();
             #endregion
 
             #region Authentication and token
@@ -110,7 +114,7 @@ namespace MadPay724.Presentation
         }
 
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISeedService seeder)
         {
             if (env.IsDevelopment())
             {
@@ -138,6 +142,7 @@ namespace MadPay724.Presentation
                 //app.UseHsts();
             }
 
+            //seeder.SeedUsers();
 
             //چون تست هستش اجازه میدم به همه اورجین های من دسترسی داشته باشه
             app.UseCors(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

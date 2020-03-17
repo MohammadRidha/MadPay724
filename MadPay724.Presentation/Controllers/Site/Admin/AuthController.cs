@@ -13,6 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MadPay724.Data.Dtos.Site.Admin.Users;
 
 namespace MadPay724.Presentation.Controllers.Site.Admin
 {
