@@ -4,14 +4,16 @@ using MadPay724.Data.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MadPay724.Data.Migrations
 {
     [DbContext(typeof(MadPayDbContext))]
-    partial class MadPayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200317180848_mig_Add_LastActiveProperty")]
+    partial class mig_Add_LastActiveProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

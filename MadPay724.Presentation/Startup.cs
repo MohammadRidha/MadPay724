@@ -41,7 +41,11 @@ namespace MadPay724.Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
             #region NSwage for document api 
 
@@ -142,6 +146,7 @@ namespace MadPay724.Presentation
                 //app.UseHsts();
             }
 
+            //کامنت کردم بخاطر اینکه هردفعه برنامه اجرا بشه لیستی از یوزر اضافه میکنه برامون
             //seeder.SeedUsers();
 
             //چون تست هستش اجازه میدم به همه اورجین های من دسترسی داشته باشه
