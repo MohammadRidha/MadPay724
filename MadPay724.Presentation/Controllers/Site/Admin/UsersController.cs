@@ -32,15 +32,16 @@ namespace MadPay724.Presentation.Controllers.Site.Admin
         public async Task<IActionResult> GetUser(string id)
         {
             // خیلی جالبه ببین یک مدل رو به یک مدل دیگه میرسونه 
-            var user = await _db.UserRepository.GetByIdAsync(id);
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            var user = await _db.UserRepository.GetManyAsync(p => p.Id == id, null, "Photos");
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user.SingleOrDefault());
             return Ok(userToReturn);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _db.UserRepository.GetAllAsync();
+            // این متد getmany که ساختیم خیلی مهمه که با یک متد بتونیم کلی اطلاعات بیرون بکشیم
+            var users = await _db.UserRepository.GetManyAsync(null, null, "Photos,BankCards");
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
             return Ok(usersToReturn);
         }

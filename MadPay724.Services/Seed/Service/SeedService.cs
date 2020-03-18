@@ -33,7 +33,7 @@ namespace MadPay724.Services.Seed.Service
 
                 user.UserName = user.UserName.ToLower();
 
-                _db.UserRepository.InserAsync(user);
+                _db.UserRepository.InsertAsync(user);
             }
 
             _db.Save();
@@ -54,7 +54,7 @@ namespace MadPay724.Services.Seed.Service
 
                 user.UserName = user.UserName.ToLower();
 
-                await _db.UserRepository.InserAsync(user);
+                await _db.UserRepository.InsertAsync(user);
             }
 
             await _db.SaveAsync();

@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Dtos\Api\" />
-    <Folder Include="Dtos\Site\Admin\BankCards\" />
     <Folder Include="Dtos\Site\App\" />
   </ItemGroup>
 

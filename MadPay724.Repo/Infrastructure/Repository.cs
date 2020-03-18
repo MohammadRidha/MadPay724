@@ -8,29 +8,28 @@ using System.Threading.Tasks;
 
 namespace MadPay724.Repo.Infrastructure
 {
-    public abstract class Repository<TEnity> : IRepository<TEnity>, IDisposable where TEnity : class
+    public abstract class Repository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : class
     {
 
         private readonly DbContext _db;
-        private readonly DbSet<TEnity> _dbSet;
+        private readonly DbSet<TEntity> _dbSet;
 
         #region ctor
 
         public Repository(DbContext db)
         {
             _db = db;
-            _dbSet = _db.Set<TEnity>();
+            _dbSet = _db.Set<TEntity>();
         }
         #endregion
 
-        #region normal
-        public void Insert(TEnity entity)
+        #region normal 
+        public void Insert(TEntity entity)
         {
-            _db.Add(entity);
+            _dbSet.Add(entity);
         }
-        public void Update(TEnity entity)
+        public void Update(TEntity entity)
         {
-
             if (entity == null)
                 throw new ArgumentException("there is no entity");
             _dbSet.Update(entity);
@@ -42,59 +41,110 @@ namespace MadPay724.Repo.Infrastructure
                 throw new ArgumentException("there is no entity");
             _dbSet.Remove(entity);
         }
-        public void Delete(TEnity entity)
+        public void Delete(TEntity entity)
         {
             _dbSet.Remove(entity);
         }
-        public void Delete(Expression<Func<TEnity, bool>> where)
+        public void Delete(Expression<Func<TEntity, bool>> where)
         {
-            IEnumerable<TEnity> objs = _dbSet.Where(where).AsEnumerable();
-            foreach (TEnity item in objs)
+            IEnumerable<TEntity> objs = _dbSet.Where(where).AsEnumerable();
+            foreach (TEntity item in objs)
             {
                 _dbSet.Remove(item);
             }
         }
-        public TEnity GetById(object id)
+        public TEntity GetById(object id)
         {
             return _dbSet.Find(id);
         }
-        public TEnity Get(Expression<Func<TEnity, bool>> where)
-        {
-            return _dbSet.Where(where).FirstOrDefault();
-        }
-        public IEnumerable<TEnity> GetAll()
+        public IEnumerable<TEntity> GetAll()
         {
             return _dbSet.AsEnumerable();
         }
-        public IEnumerable<TEnity> GetMany(Expression<Func<TEnity, bool>> where)
+        public IEnumerable<TEntity> GetMany(
+            Expression<Func<TEntity, bool>> filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            string includeEntity = "")
         {
-            return _dbSet.Where(where).AsEnumerable();
-        }
+            //return _dbSet.Where(where).FirstOrDefault();
 
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (var includeentity in includeEntity.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeentity);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).ToList();
+            }
+            else
+            {
+                return query.ToList();
+            }
+
+        }
+        public TEntity Get(Expression<Func<TEntity, bool>> where)
+        {
+            return _dbSet.Where(where).FirstOrDefault();
+        }
         #endregion
 
+
         #region async
-        public async Task InserAsync(TEnity entity)
+        public async Task InsertAsync(TEntity entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task<TEnity> GetByIdAsync(object id)
+        public async Task<TEntity> GetByIdAsync(object id)
         {
             return await _dbSet.FindAsync(id);
         }
-        public async Task<IEnumerable<TEnity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
-        public async Task<TEnity> GetAsync(Expression<Func<TEnity, bool>> where)
+        public async Task<IEnumerable<TEntity>> GetManyAsync(
+      Expression<Func<TEntity, bool>> filter = null,
+      Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+      string includeEntity = "")
+        {
+            //return _dbSet.Where(where).FirstOrDefault();
+
+            IQueryable<TEntity> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (var includeentity in includeEntity.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeentity);
+            }
+
+            if (orderBy != null)
+            {
+                return await orderBy(query).ToListAsync();
+            }
+            else
+            {
+                return await query.ToListAsync();
+            }
+
+        }
+        public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> where)
         {
             return await _dbSet.Where(where).FirstOrDefaultAsync();
         }
-        public async Task<IEnumerable<TEnity>> GetManyAsync(Expression<Func<TEnity, bool>> where)
-        {
-            return await _dbSet.Where(where).ToListAsync();
-        }
+
 
 
         #endregion
@@ -117,6 +167,7 @@ namespace MadPay724.Repo.Infrastructure
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
 
         ~Repository()
         {

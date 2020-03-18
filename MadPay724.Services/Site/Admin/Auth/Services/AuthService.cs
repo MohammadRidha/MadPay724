@@ -21,7 +21,7 @@ namespace MadPay724.Services.Site.Admin.Auth.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            await _db.UserRepository.InserAsync(user);
+            await _db.UserRepository.InsertAsync(user);
             await _db.SaveAsync();
 
             return user;
