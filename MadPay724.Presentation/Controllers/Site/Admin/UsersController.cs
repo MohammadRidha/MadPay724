@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using MadPay724.Data.DatabaseContext;
@@ -28,15 +29,6 @@ namespace MadPay724.Presentation.Controllers.Site.Admin
             _mapper = mapper;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(string id)
-        {
-            // خیلی جالبه ببین یک مدل رو به یک مدل دیگه میرسونه 
-            var user = await _db.UserRepository.GetManyAsync(p => p.Id == id, null, "Photos");
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user.SingleOrDefault());
-            return Ok(userToReturn);
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -45,5 +37,28 @@ namespace MadPay724.Presentation.Controllers.Site.Admin
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
             return Ok(usersToReturn);
         }
+
+        [Route("GetUser/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            // این شرط برای هست که اگر کاربری آیدی کاربری رو پیدا کرد نتونه اطلاعات رو بکشه بیرون
+            if (User.FindFirst(ClaimTypes.NameIdentifier).Value == id)
+            {
+                // خیلی جالبه ببین یک مدل رو به یک مدل دیگه میرسونه 
+                var user = await _db.UserRepository.GetManyAsync(p => p.Id == id, null, "Photos");
+                var userToReturn = _mapper.Map<UserForDetailedDto>(user.SingleOrDefault());
+                return Ok(userToReturn);
+            }
+            else
+            {
+                return Unauthorized("عدم دسترسی یا اشتباه در ورودی");
+            }
+
+
+
+        }
+
+        
     }
 }
